@@ -11,16 +11,20 @@
         in
         with pkgs;
         {
-          devShells.default = mkShell {
-            buildInputs = [ 
-              pkgs.qt6.full 
-              pkgs.qtcreator
-            ];
-            shellHook = ''
-              echo "Entering Qt6 dev shell"
-              echo "Qt Version: ${pkgs.qt6.qtbase.version}"
-              echo "Qt Creator Version: ${pkgs.qtcreator.version}"
-            '';
+          apps.default = {
+            type = "app";
+            program = let drv = pkgs.buildFHSEnv {
+              name = "qt-env";
+                targetPkgs = pkgs: (with pkgs; [
+                  qt6.full 
+                  mesa
+                  libGL
+                  cmake
+                  qtcreator
+                  pkgs.cmake-format
+                  gdb
+                ]);
+            }; in "${drv}/bin/qt-env";
           };
         }
       );
