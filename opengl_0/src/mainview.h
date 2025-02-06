@@ -36,6 +36,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
   void wheelEvent(QWheelEvent *ev) override;
 
  private:
+  GLuint vboName;
+  GLuint vaoName;
+  QOpenGLShaderProgram shaderProgram;
   QOpenGLDebugLogger debugLogger;
 
  private slots:
