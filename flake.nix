@@ -1,5 +1,4 @@
 # Use `nix run .#default` to enter the development environment.
-# If you don't use zsh remove the 'runScript' line as commented below
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -24,12 +23,16 @@
                   cmake
                   qtcreator
                   pkgs.cmake-format
+                  clang
+                  clang-tools
+                  ccache
                   gdb
                 ]);
-              runScript = "zsh"; # delete this if you don't want to use zsh
               profile = ''
                 # Set environment variable that zsh can detect
                 export IN_NIX_SHELL=impure
+                echo "Entered CG Development Environment"
+                echo "Use 'qtcreator &' to open qtcreator"
               '';
             }; in "${drv}/bin/qt-env";
           };
