@@ -10,8 +10,6 @@
 #include <QTimer>
 #include <QVector3D>
 
-#include "model.h"
-
 /**
  * @brief The MainView class is resonsible for the actual content of the main
  * window.
@@ -26,6 +24,10 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
   // Functions for widget input events
   void setRotation(int rotateX, int rotateY, int rotateZ);
   void setScale(float scale);
+
+ private:
+  void initializePyramid(GLuint VBO, GLuint VAO, QMatrix4x4 *modelTrans, int *vertexCount);
+  void initializeKnot(GLuint VBO, GLuint VAO, QMatrix4x4 *modelTrans, int *vertexCount);
 
  protected:
   void initializeGL() override;
@@ -49,10 +51,11 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
  private:
   QOpenGLDebugLogger debugLogger;
   QTimer timer;  // timer used for animation
-  GLuint VBO;
-  GLuint VAO;
+  std::vector<GLuint> vbos;
+  std::vector<GLuint> vaos;
+  std::vector<QMatrix4x4> transformations;
+  std::vector<int> vertexCounts;
   QMatrix4x4 projectionTrans;
-  QMatrix4x4 modelTrans;
 
   QOpenGLShaderProgram shaderProgram;
 

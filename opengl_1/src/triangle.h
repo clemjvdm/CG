@@ -1,8 +1,6 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#endif // TRIANGLE_H
-
 struct Vertex {
     float x;
     float y;
@@ -21,3 +19,5 @@ struct Vertex {
     }
 
 };
+
+#endif // TRIANGLE_H
