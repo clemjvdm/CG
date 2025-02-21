@@ -66,8 +66,8 @@ void MainView::initializeGL() {
 
 
   //Create the triangle vertices with the appropriate colors
-  Vertex v1(-1,1,1,1,0,0);
-  Vertex v2(1,1,1,0,1,0);
+  Vertex v1(-1,1,1,1,0,0.66);
+  Vertex v2(1,1,1,0,1.5,0.85);
   Vertex v3(1,-1,1,1,1,0);
   Vertex v4(-1,-1,1,0,0,1);
   Vertex v5(0,0,-1,1,0,1);
@@ -107,7 +107,9 @@ void MainView::initializeGL() {
   modelTrans(1,3) = 0.0f;
   modelTrans(2,3) = -6.0f;
 
-
+  float width = window()->size().width();
+  float height = window()->size().height();
+  projectionTrans.perspective(60, width/height, 0.2,20);
   createShaderProgram();
 
 }
@@ -133,7 +135,9 @@ void MainView::paintGL() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   shaderProgram.bind();
-  glDrawArrays(GL_TRIANGLES,0,6);
+  glDrawArrays(GL_TRIANGLES,0,18);
+  shaderProgram.setUniformValue("modelTrans", modelTrans);
+  shaderProgram.setUniformValue("projectionTrans", projectionTrans);
   shaderProgram.release();
 }
 
@@ -147,6 +151,8 @@ void MainView::resizeGL(int newWidth, int newHeight) {
   // TODO: Update projection to fit the new aspect ratio
   Q_UNUSED(newWidth)
   Q_UNUSED(newHeight)
+
+  projectionTrans.perspective(60,(float)((float)newWidth/(float)newHeight), 0.2,20);
 }
 
 /**
