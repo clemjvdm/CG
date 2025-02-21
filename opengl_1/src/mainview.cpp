@@ -163,8 +163,19 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ) {
   qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << ","
            << rotateZ << ")";
+
+  // extract translation and null last column
+  QVector3D translation = modelTrans.column(3).toVector3D();
+
+  // extract scale
+  float scale = modelTrans.column(0).length(); // assuming the scale is always proportional along all axes
+
+  // clear rotation by removing all transformations and re-applying translation and scaling
   modelTrans.setToIdentity();
-  modelTrans.translate(-2,0,-6);
+  modelTrans.translate(translation);
+  modelTrans.scale(scale);
+
+  // rotate model by desired amount
   modelTrans.rotate(rotateX, 1, 0, 0);
   modelTrans.rotate(rotateY, 0, 1, 0);
   modelTrans.rotate(rotateZ, 0, 0, 1);
@@ -178,7 +189,16 @@ void MainView::setRotation(int rotateX, int rotateY, int rotateZ) {
  */
 void MainView::setScale(float scale) {
   qDebug() << "Scale changed to " << scale;
-  Q_UNIMPLEMENTED();
+
+  // exract current scale
+  float currentScale = modelTrans.column(0).length(); // assuming the scale is always proportional along all axes
+
+  // reset scale
+  modelTrans.scale(1/currentScale);
+
+  // scale to desired value
+  modelTrans.scale(scale);
+  update();
 }
 
 /**
