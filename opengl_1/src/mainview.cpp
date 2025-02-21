@@ -133,9 +133,9 @@ void MainView::paintGL() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   shaderProgram.bind();
-  glDrawArrays(GL_TRIANGLES,0,18);
   shaderProgram.setUniformValue("modelTransform", modelTrans);
   shaderProgram.setUniformValue("projectionTransform", projectionTrans);
+  glDrawArrays(GL_TRIANGLES,0,18);
   shaderProgram.release();
 }
 
