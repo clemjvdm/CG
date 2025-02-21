@@ -66,8 +66,8 @@ void MainView::initializeGL() {
 
 
   //Create the triangle vertices with the appropriate colors
-  Vertex v1(-1,1,1,1,0,0.66);
-  Vertex v2(1,1,1,0,1.5,0.85);
+  Vertex v1(-1,1,1,1,0,0);
+  Vertex v2(1,1,1,0,1,0);
   Vertex v3(1,-1,1,1,1,0);
   Vertex v4(-1,-1,1,0,0,1);
   Vertex v5(0,0,-1,1,0,1);
@@ -79,10 +79,10 @@ void MainView::initializeGL() {
     v1,v4,v3,
     v1,v3,v2,
     //Depth vertices
-    v5,v2,v1,
-    v1,v4,v5,
-    v5,v3,v2,
-    v5,v4,v3,
+    v5,v1,v2,
+    v5,v4,v1,
+    v2,v3,v5,
+    v4,v5,v3,
   };
 
   //Create the VAO and VBO for the pyramid
@@ -107,11 +107,9 @@ void MainView::initializeGL() {
   modelTrans(1,3) = 0.0f;
   modelTrans(2,3) = -6.0f;
 
-  float width = window()->size().width();
-  float height = window()->size().height();
-  projectionTrans.perspective(60, width/height, 0.2,20);
+  projectionTrans.setToIdentity();
+  projectionTrans.perspective(60, 1, 0.2,20);
   createShaderProgram();
-
 }
 
 /**
@@ -136,8 +134,8 @@ void MainView::paintGL() {
 
   shaderProgram.bind();
   glDrawArrays(GL_TRIANGLES,0,18);
-  shaderProgram.setUniformValue("modelTrans", modelTrans);
-  shaderProgram.setUniformValue("projectionTrans", projectionTrans);
+  shaderProgram.setUniformValue("modelTransform", modelTrans);
+  shaderProgram.setUniformValue("projectionTransform", projectionTrans);
   shaderProgram.release();
 }
 
@@ -151,8 +149,9 @@ void MainView::resizeGL(int newWidth, int newHeight) {
   // TODO: Update projection to fit the new aspect ratio
   Q_UNUSED(newWidth)
   Q_UNUSED(newHeight)
+  projectionTrans.setToIdentity();
+  projectionTrans.perspective(60, (float)newWidth/(float)newHeight, 0.2, 20);
 
-  projectionTrans.perspective(60,(float)((float)newWidth/(float)newHeight), 0.2,20);
 }
 
 /**
@@ -164,7 +163,12 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ) {
   qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << ","
            << rotateZ << ")";
-  Q_UNIMPLEMENTED();
+  modelTrans.setToIdentity();
+  modelTrans.translate(-2,0,-6);
+  modelTrans.rotate(rotateX, 1, 0, 0);
+  modelTrans.rotate(rotateY, 0, 1, 0);
+  modelTrans.rotate(rotateZ, 0, 0, 1);
+  update();
 }
 
 /**
